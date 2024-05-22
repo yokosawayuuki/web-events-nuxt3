@@ -71,30 +71,12 @@
     fetch('/api/events')
       .then(response => response.json())
       .then(data => {
-        data.forEach(item => {
-          // if (item.description) {
-          //   const parts = item.description.split(/(<a\s*href=['"](.*?)['"]>(.*?)<\/a>)/);
-          //   item.aTag = parts.find(part => part.startsWith('<a'));
-          //   const ulPart = parts.find(part => part.includes('<ul>'));
-          //   if (ulPart) {
-          //     item.ulTagWithClass = processUlTag(ulPart);
-          //   }
-          // }
-        });
+        data.forEach(item => {});
         events.value = data;
       })
       .catch(error => console.error(error));
   }
-
-  // const processUlTag = (ulTag) => {
-  //   const liParts = ulTag.match(/<li>(.*?)<\/li>/g) || [];
-  //   const liTagsWithClass = liParts.map(part => {
-  //     const content = part.replace(/<\/?li>/g, '').trim();
-  //     return `<li class="rounded-3xl py-1 px-3 bg-[#ddd] text-xs">${content}</li>`;
-  //   }).join('');
-  //   return `<ul class="flex gap-x-2.5">${liTagsWithClass}</ul>`;
-  // }
-
+  
   onMounted(() => {
     fetchEvents();
   });
