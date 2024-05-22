@@ -13,14 +13,10 @@
     />
     <div v-if="events.length">
       <ul id='resultArea' class="border-t border-solid border-[#333]">
-        <!-- <li v-for="event in events" :key="event.id"> -->
-          <!-- {{ event.summary }} - {{ new Date(event.start.dateTime).toLocaleString() }} -->
-        <!-- </li> -->
-
         <li
-          class="py-5 border-b border-solid border-[#333]"
           v-for="item in events"
           :key="item.id"
+          class="py-5 border-b border-solid border-[#333]"
         >
           <h2
             class="mb-1 text-xl font-bold"
@@ -29,16 +25,27 @@
           <div class="flex gap-x-2.5 mb-2.5">
             <time>{{ formatDate(item.start.dateTime) }}</time>〜<time>{{ formatDate(item.end.dateTime) }}</time>
           </div>
-          <p
-            v-if="item.aTag"
-            v-html="item.aTag"
-            style="word-wrap: break-word;"
-          ></p>
+          <div
+            v-for="item in item.description"
+            :key="item.cat"
+          >
+            <ul
+              v-if="item.cat"
+              class="category mt-4 flex gap-x-2.5"
+              v-html="item.cat"
+            />
+            <a
+              class="underline break-words"
+              :href="item.link"
+              v-text="item.link"
+              target="_blank"
+            />
+          </div>
         </li>
       </ul>
     </div>
     <div v-else>
-      <p>No upcoming events.</p>
+      <p>登録されているイベント情報がありません。</p>
     </div>
   </div>
 </template>
@@ -48,26 +55,58 @@
 
   const events = ref([]);
 
-  const formatDate = (dateString) => {
-  const date = new Date(dateString);
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-  const hours = String(date.getHours()).padStart(2, '0');
-  const minutes = String(date.getMinutes()).padStart(2, '0');
-  return `${year}/${month}/${day} ${hours}:${minutes}`;
-}
+  const today = new Date();
 
-  const fetchEvents = async () => {
-    try {
-      const eventsData = await $fetch('/api/events');
-      events.value = eventsData;
-    } catch (error) {
-      console.error('Failed to fetch events', error);
-    }
-  };
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    return `${year}/${month}/${day} ${hours}:${minutes}`;
+  }
+
+  const fetchEvents = () => {
+    fetch('/api/events')
+      .then(response => response.json())
+      .then(data => {
+        data.forEach(item => {
+          // if (item.description) {
+          //   const parts = item.description.split(/(<a\s*href=['"](.*?)['"]>(.*?)<\/a>)/);
+          //   item.aTag = parts.find(part => part.startsWith('<a'));
+          //   const ulPart = parts.find(part => part.includes('<ul>'));
+          //   if (ulPart) {
+          //     item.ulTagWithClass = processUlTag(ulPart);
+          //   }
+          // }
+        });
+        events.value = data;
+      })
+      .catch(error => console.error(error));
+  }
+
+  // const processUlTag = (ulTag) => {
+  //   const liParts = ulTag.match(/<li>(.*?)<\/li>/g) || [];
+  //   const liTagsWithClass = liParts.map(part => {
+  //     const content = part.replace(/<\/?li>/g, '').trim();
+  //     return `<li class="rounded-3xl py-1 px-3 bg-[#ddd] text-xs">${content}</li>`;
+  //   }).join('');
+  //   return `<ul class="flex gap-x-2.5">${liTagsWithClass}</ul>`;
+  // }
 
   onMounted(() => {
     fetchEvents();
   });
 </script>
+
+
+<style>
+.category li {
+  border-radius: 20px;
+  padding:4px 12px;
+  color: #1a2335;
+  background-color: #f2f1ed;
+  font-size: 12px;
+}
+</style>
