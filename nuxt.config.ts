@@ -24,8 +24,6 @@ export default defineNuxtConfig({
   ],
   runtimeConfig: {
     public: {
-      // apiKey: process.env.API_KEY,
-      // calendarId: process.env.CALENDAR_ID,
       googleApiKey: process.env.GOOGLE_API_KEY,
       googleCalendarId: process.env.GOOGLE_CALENDAR_ID
     }

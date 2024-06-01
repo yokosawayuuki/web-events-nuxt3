@@ -25,7 +25,7 @@ export default defineEventHandler(async (event) => {
 
 function processEvents(events) {
   return events.map(event => {
-    const description = event.description;
+    const description = event.description || ''; // descriptionがundefinedの場合に空文字列を使用
     const descriptionParts = [];
 
     // a要素を抽出
