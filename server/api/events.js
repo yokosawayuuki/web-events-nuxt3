@@ -1,5 +1,6 @@
 import { google } from 'googleapis';
 
+
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig();
   const calendarId = config.public.googleCalendarId;

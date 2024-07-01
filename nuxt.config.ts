@@ -39,4 +39,5 @@ export default defineNuxtConfig({
   serverMiddleware: [
     { path: '/api/events', handler: '~/server/api/events.js' }
   ],
+  
 });
